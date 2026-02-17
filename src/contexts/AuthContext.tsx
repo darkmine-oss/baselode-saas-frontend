@@ -63,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const logout = useCallback(() => {
-    authApi.logout();
+    void authApi.logout();
     setUser(null);
     setToken(null);
   }, []);
