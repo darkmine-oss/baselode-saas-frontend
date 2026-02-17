@@ -1,17 +1,7 @@
-import { createContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+import { useState, useEffect, useCallback, type ReactNode } from 'react';
 import type { User, AuthToken, LoginRequest, RegisterRequest } from '../types';
 import * as authApi from '../api/auth';
-
-export interface AuthContextValue {
-  user: User | null;
-  token: AuthToken | null;
-  loading: boolean;
-  login: (req: LoginRequest) => Promise<void>;
-  register: (req: RegisterRequest) => Promise<void>;
-  logout: () => void;
-}
-
-export const AuthContext = createContext<AuthContextValue | null>(null);
+import { AuthContext } from './AuthContextObject';
 
 const STORAGE_USER_KEY = 'auth_user';
 const STORAGE_TOKEN_KEY = 'auth_token';

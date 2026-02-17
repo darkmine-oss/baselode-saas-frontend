@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8050';
+import { API_BASE_URL } from './config';
 
 function getAuthToken(): string | null {
   const stored = localStorage.getItem('auth_token');
@@ -26,7 +26,7 @@ export async function apiRequest<T>(
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers,
   });

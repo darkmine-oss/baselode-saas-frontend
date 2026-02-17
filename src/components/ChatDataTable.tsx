@@ -1,5 +1,7 @@
-import { CollarMap } from './CollarMap';
+import { lazy, Suspense } from 'react';
 import styles from './ChatDataTable.module.css';
+
+const CollarMap = lazy(() => import('./CollarMap').then((module) => ({ default: module.CollarMap })));
 
 interface ChatDataTableProps {
   type: string;
@@ -66,10 +68,12 @@ export function ChatDataTable({ type, payload }: ChatDataTableProps) {
 
   if (type === 'collar_map' && isCollarPayload(payload)) {
     return (
-      <CollarMap
-        collars={payload.collars as { hole_id?: string; latitude?: number; longitude?: number; [key: string]: unknown }[]}
-        totalCount={payload.total_count}
-      />
+      <Suspense fallback={<p className={styles.empty}>Loading map...</p>}>
+        <CollarMap
+          collars={payload.collars as { hole_id?: string; latitude?: number; longitude?: number; [key: string]: unknown }[]}
+          totalCount={payload.total_count}
+        />
+      </Suspense>
     );
   }
 

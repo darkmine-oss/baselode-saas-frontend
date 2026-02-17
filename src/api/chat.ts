@@ -1,6 +1,7 @@
 import type { ChatInstance } from '../types';
+import { API_BASE_URL } from './config';
 
-const BASE_URL = 'http://localhost:8050';
+const JSON_HEADERS = { 'Content-Type': 'application/json' };
 
 function parseSSELine(line: string): { field: string; value: string } | null {
   const trimmed = line.replace(/\r$/, '');
@@ -69,9 +70,9 @@ export async function streamResponse(
 }
 
 export async function createChat(message: string): Promise<Response> {
-  const res = await fetch(`${BASE_URL}/chat/`, {
+  const res = await fetch(`${API_BASE_URL}/chat/`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: JSON_HEADERS,
     body: JSON.stringify({ message }),
   });
   if (!res.ok) throw new Error(`Chat creation failed: ${res.status}`);
@@ -79,9 +80,9 @@ export async function createChat(message: string): Promise<Response> {
 }
 
 export async function sendMessage(instanceId: string, message: string): Promise<Response> {
-  const res = await fetch(`${BASE_URL}/chat/${instanceId}`, {
+  const res = await fetch(`${API_BASE_URL}/chat/${instanceId}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: JSON_HEADERS,
     body: JSON.stringify({ message }),
   });
   if (!res.ok) throw new Error(`Send message failed: ${res.status}`);

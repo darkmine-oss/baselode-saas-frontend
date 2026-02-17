@@ -1,8 +1,9 @@
 import { useEffect, useRef, useMemo } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { HOLE_ID } from 'baselode';
 import styles from './CollarMap.module.css';
+
+const HOLE_ID = 'hole_id';
 
 interface Collar {
   hole_id?: string;
@@ -48,7 +49,6 @@ export function CollarMap({ collars, totalCount }: CollarMapProps) {
         properties: {
           id: idx,
           [HOLE_ID]: c.hole_id ?? '',
-          hole_id: c.hole_id ?? '',
         },
       })),
     }),
@@ -168,16 +168,20 @@ export function CollarMap({ collars, totalCount }: CollarMapProps) {
         const feature = e.features?.[0];
         const source = map.getSource('collars');
         if (!feature || !source || !('getClusterExpansionZoom' in source)) return;
-        (source as maplibregl.GeoJSONSource).getClusterExpansionZoom(
-          feature.id as number,
-          (err, zoom) => {
-            if (err || zoom == null) return;
+        const clusterId = Number(feature.properties?.cluster_id);
+        if (!Number.isFinite(clusterId)) return;
+
+        (source as maplibregl.GeoJSONSource)
+          .getClusterExpansionZoom(clusterId)
+          .then((zoom) => {
             map.easeTo({
               center: (feature.geometry as GeoJSON.Point).coordinates as [number, number],
               zoom,
             });
-          },
-        );
+          })
+          .catch(() => {
+            // no-op
+          });
       });
 
       // Fit bounds to show all collars
