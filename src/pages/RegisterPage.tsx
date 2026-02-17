@@ -10,16 +10,37 @@ export function RegisterPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [confirmEmail, setConfirmEmail] = useState(false);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError('');
     try {
-      await register({ name, email, password });
-      navigate('/dashboard');
+      const res = await register({ name, email, password });
+      if (res.confirmEmail) {
+        setConfirmEmail(true);
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Registration failed');
     }
+  }
+
+  if (confirmEmail) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.card}>
+          <h1 className={styles.title}>Check your email</h1>
+          <p className={styles.subtitle}>
+            We sent a confirmation link to <strong>{email}</strong>. Click the link to activate your account, then come back and sign in.
+          </p>
+          <p className={styles.link}>
+            <Link to="/login">Back to sign in</Link>
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (

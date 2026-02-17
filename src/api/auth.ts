@@ -1,4 +1,4 @@
-import type { LoginRequest, RegisterRequest, AuthResponse } from '../types';
+import type { LoginRequest, RegisterRequest, AuthResponse, RegisterResponse } from '../types';
 import type { User } from '../types/user';
 import type { AuthToken } from '../types/auth';
 import { supabase } from '../lib/supabase';
@@ -38,20 +38,29 @@ export async function login(req: LoginRequest): Promise<AuthResponse> {
   };
 }
 
-export async function register(req: RegisterRequest): Promise<AuthResponse> {
+export async function register(req: RegisterRequest): Promise<RegisterResponse> {
   const { data, error } = await supabase.auth.signUp({
     email: req.email,
     password: req.password,
     options: { data: { name: req.name } },
   });
 
-  if (error || !data.session) {
-    throw new Error(error?.message ?? 'Registration failed');
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data.session) {
+    return {
+      user: data.user ? mapUser(data.user) : null,
+      token: null,
+      confirmEmail: true,
+    };
   }
 
   return {
     user: mapUser(data.user!),
     token: mapToken(data.session),
+    confirmEmail: false,
   };
 }
 
