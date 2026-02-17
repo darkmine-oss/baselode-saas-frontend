@@ -2,7 +2,7 @@
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: var(--glass-radius);
-  backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: var(--glass-blur);
   padding: 20px;
 }
 
