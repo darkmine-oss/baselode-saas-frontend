@@ -18,7 +18,7 @@ export function mapToken(session: Session): AuthToken {
   return {
     accessToken: session.access_token,
     refreshToken: session.refresh_token,
-    expiresAt: session.expires_at ?? 0,
+    expiresAt: (session.expires_at ?? 0) * 1000,
   };
 }
 
