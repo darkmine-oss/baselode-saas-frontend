@@ -152,10 +152,14 @@ export function CollarMap({ collars, totalCount }: CollarMapProps) {
         if (!feature || !popupRef.current) return;
         const coords = (feature.geometry as GeoJSON.Point).coordinates.slice() as [number, number];
         const props = feature.properties ?? {};
-        const holeId = props[HOLE_ID] || props.hole_id || '';
+        const holeId = (props[HOLE_ID] || props.hole_id || '') as string;
+        const popupContent = document.createElement('div');
+        const strongElement = document.createElement('strong');
+        strongElement.textContent = holeId;
+        popupContent.appendChild(strongElement);
         popupRef.current
           .setLngLat(coords)
-          .setHTML(`<div><strong>${holeId}</strong></div>`)
+          .setDOMContent(popupContent)
           .addTo(map);
       });
 
