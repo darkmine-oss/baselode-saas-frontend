@@ -1,0 +1,60 @@
+import { useState, type FormEvent } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import styles from './LoginPage.module.css';
+
+export function LoginPage() {
+  const { login, loading } = useAuth();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    await login({ email, password });
+    navigate('/dashboard');
+  }
+
+  return (
+    <div className={styles.container}>
+      <form className={styles.card} onSubmit={handleSubmit}>
+        <h1 className={styles.title}>Sign in</h1>
+        <p className={styles.subtitle}>Enter your credentials to continue</p>
+
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="email">Email</label>
+          <input
+            id="email"
+            className={styles.input}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            required
+          />
+        </div>
+
+        <div className={styles.field}>
+          <label className={styles.label} htmlFor="password">Password</label>
+          <input
+            id="password"
+            className={styles.input}
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter password"
+            required
+          />
+        </div>
+
+        <button className={styles.button} type="submit" disabled={loading}>
+          {loading ? 'Signing in...' : 'Sign in'}
+        </button>
+
+        <p className={styles.link}>
+          Don't have an account? <Link to="/register">Create one</Link>
+        </p>
+      </form>
+    </div>
+  );
+}

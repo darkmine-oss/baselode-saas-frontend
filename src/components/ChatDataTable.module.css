@@ -1,0 +1,70 @@
+.wrapper {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  backdrop-filter: blur(var(--glass-blur));
+  padding: 20px;
+}
+
+.count {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 12px;
+}
+
+.tableScroll {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.th {
+  text-align: left;
+  padding: 8px 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.6875rem;
+  border-bottom: 1px solid var(--glass-border);
+  white-space: nowrap;
+}
+
+.tr:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.td {
+  padding: 8px 12px;
+  color: var(--color-text);
+  border-bottom: 1px solid var(--glass-border);
+  white-space: nowrap;
+}
+
+.empty {
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+}
+
+.fallbackLabel {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+
+.fallback {
+  font-size: 0.75rem;
+  color: var(--color-text);
+  background: rgba(0, 0, 0, 0.04);
+  padding: 12px;
+  border-radius: var(--glass-radius-sm);
+  overflow-x: auto;
+  margin: 0;
+}
