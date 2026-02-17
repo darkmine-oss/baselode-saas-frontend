@@ -1,0 +1,28 @@
+.wrapper {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius);
+  backdrop-filter: blur(var(--glass-blur));
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.count {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 12px;
+}
+
+.map {
+  flex: 1;
+  min-height: 400px;
+  border-radius: var(--glass-radius-sm);
+  overflow: hidden;
+}
+
+.empty {
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+}
