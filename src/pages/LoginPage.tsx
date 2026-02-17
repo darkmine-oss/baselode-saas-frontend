@@ -8,11 +8,17 @@ export function LoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    await login({ email, password });
-    navigate('/dashboard');
+    setError('');
+    try {
+      await login({ email, password });
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Login failed');
+    }
   }
 
   return (
@@ -20,6 +26,8 @@ export function LoginPage() {
       <form className={styles.card} onSubmit={handleSubmit}>
         <h1 className={styles.title}>Sign in</h1>
         <p className={styles.subtitle}>Enter your credentials to continue</p>
+
+        {error && <p className={styles.error}>{error}</p>}
 
         <div className={styles.field}>
           <label className={styles.label} htmlFor="email">Email</label>

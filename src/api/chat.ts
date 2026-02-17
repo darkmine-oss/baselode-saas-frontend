@@ -1,7 +1,17 @@
 import type { ChatInstance } from '../types';
 import { API_BASE_URL } from './config';
+import { supabase } from '../lib/supabase';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json' };
+
+async function getAuthHeaders(): Promise<Record<string, string>> {
+  const { data: { session } } = await supabase.auth.getSession();
+  const headers: Record<string, string> = { ...JSON_HEADERS };
+  if (session?.access_token) {
+    headers['Authorization'] = `Bearer ${session.access_token}`;
+  }
+  return headers;
+}
 
 function parseSSELine(line: string): { field: string; value: string } | null {
   const trimmed = line.replace(/\r$/, '');
@@ -70,9 +80,10 @@ export async function streamResponse(
 }
 
 export async function createChat(message: string): Promise<Response> {
+  const headers = await getAuthHeaders();
   const res = await fetch(`${API_BASE_URL}/chat/`, {
     method: 'POST',
-    headers: JSON_HEADERS,
+    headers,
     body: JSON.stringify({ message }),
   });
   if (!res.ok) throw new Error(`Chat creation failed: ${res.status}`);
@@ -80,9 +91,10 @@ export async function createChat(message: string): Promise<Response> {
 }
 
 export async function sendMessage(instanceId: string, message: string): Promise<Response> {
+  const headers = await getAuthHeaders();
   const res = await fetch(`${API_BASE_URL}/chat/${instanceId}`, {
     method: 'POST',
-    headers: JSON_HEADERS,
+    headers,
     body: JSON.stringify({ message }),
   });
   if (!res.ok) throw new Error(`Send message failed: ${res.status}`);

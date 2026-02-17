@@ -9,11 +9,17 @@ export function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    await register({ name, email, password });
-    navigate('/dashboard');
+    setError('');
+    try {
+      await register({ name, email, password });
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Registration failed');
+    }
   }
 
   return (
@@ -21,6 +27,8 @@ export function RegisterPage() {
       <form className={styles.card} onSubmit={handleSubmit}>
         <h1 className={styles.title}>Create account</h1>
         <p className={styles.subtitle}>Sign up to get started</p>
+
+        {error && <p className={styles.error}>{error}</p>}
 
         <div className={styles.field}>
           <label className={styles.label} htmlFor="name">Name</label>
