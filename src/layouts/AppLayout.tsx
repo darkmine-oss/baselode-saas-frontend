@@ -53,22 +53,27 @@ export function AppLayout({ messages, streaming, sendMessage }: AppLayoutProps) 
   return (
     <div className={styles.layout}>
       <Sidebar messages={messages} streaming={streaming} sendMessage={sendMessage} />
-      <main className={styles.main}>
-        {dataAttachments && dataAttachments.length > 0 ? (
-          <div className={styles.dataArea}>
-            {dataAttachments.map((attachment) => {
-              const baseKey = getAttachmentBaseKey(attachment.type, attachment.payload);
-              const seenCount = attachmentKeyCounts.get(baseKey) ?? 0;
-              attachmentKeyCounts.set(baseKey, seenCount + 1);
-              const key = seenCount === 0 ? baseKey : `${baseKey}:${seenCount}`;
+      <div className={styles.content}>
+        <main className={styles.main}>
+          {dataAttachments && dataAttachments.length > 0 ? (
+            <div className={styles.dataArea}>
+              {dataAttachments.map((attachment) => {
+                const baseKey = getAttachmentBaseKey(attachment.type, attachment.payload);
+                const seenCount = attachmentKeyCounts.get(baseKey) ?? 0;
+                attachmentKeyCounts.set(baseKey, seenCount + 1);
+                const key = seenCount === 0 ? baseKey : `${baseKey}:${seenCount}`;
 
-              return <ChatDataTable key={key} type={attachment.type} payload={attachment.payload} />;
-            })}
-          </div>
-        ) : (
-          <p className={styles.placeholder}>Data visualization area</p>
-        )}
-      </main>
+                return <ChatDataTable key={key} type={attachment.type} payload={attachment.payload} />;
+              })}
+            </div>
+          ) : (
+            <p className={styles.placeholder}>Data visualization area</p>
+          )}
+        </main>
+        <footer className={styles.footer}>
+          <a href="https://github.com/darkmine-oss/baselode-saas-frontend" target="_blank" rel="noopener noreferrer">Source</a>
+        </footer>
+      </div>
     </div>
   );
 }

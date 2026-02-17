@@ -1,49 +1,70 @@
-import type { LoginRequest, RegisterRequest, AuthResponse } from '../types';
+import type { LoginRequest, RegisterRequest, AuthResponse, RegisterResponse } from '../types';
+import type { User } from '../types/user';
+import type { AuthToken } from '../types/auth';
+import { supabase } from '../lib/supabase';
+import type { Session, User as SupabaseUser } from '@supabase/supabase-js';
 
-const MOCK_USER = {
-  id: '1',
-  email: 'user@example.com',
-  name: 'Demo User',
-  role: 'admin' as const,
-  createdAt: new Date().toISOString(),
-};
-
-const MOCK_TOKEN = {
-  accessToken: 'mock-access-token',
-  refreshToken: 'mock-refresh-token',
-  expiresAt: Date.now() + 3600_000,
-};
-
-function delay(ms = 500): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-export async function login(req: LoginRequest): Promise<AuthResponse> {
-  await delay();
-  // Mock: accept any credentials
+export function mapUser(su: SupabaseUser): User {
   return {
-    user: { ...MOCK_USER, email: req.email },
-    token: MOCK_TOKEN,
+    id: su.id,
+    email: su.email ?? '',
+    name: (su.user_metadata?.name as string) ?? '',
+    role: (su.user_metadata?.role as User['role']) ?? 'member',
+    createdAt: su.created_at,
   };
 }
 
-export async function register(req: RegisterRequest): Promise<AuthResponse> {
-  await delay();
+export function mapToken(session: Session): AuthToken {
   return {
-    user: { ...MOCK_USER, email: req.email, name: req.name },
-    token: MOCK_TOKEN,
+    accessToken: session.access_token,
+    refreshToken: session.refresh_token,
+    expiresAt: (session.expires_at ?? 0) * 1000,
+  };
+}
+
+export async function login(req: LoginRequest): Promise<AuthResponse> {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: req.email,
+    password: req.password,
+  });
+
+  if (error || !data.session) {
+    throw new Error(error?.message ?? 'Login failed');
+  }
+
+  return {
+    user: mapUser(data.user),
+    token: mapToken(data.session),
+  };
+}
+
+export async function register(req: RegisterRequest): Promise<RegisterResponse> {
+  const { data, error } = await supabase.auth.signUp({
+    email: req.email,
+    password: req.password,
+    options: { data: { name: req.name } },
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!data.session || !data.user) {
+    return {
+      user: data.user ? mapUser(data.user) : null,
+      token: null,
+      confirmEmail: true,
+    };
+  }
+
+  return {
+    user: mapUser(data.user),
+    token: mapToken(data.session),
+    confirmEmail: false,
   };
 }
 
 export async function logout(): Promise<void> {
-  await delay(200);
-}
-
-export async function refreshToken(token: string): Promise<AuthResponse> {
-  await delay(200);
-  void token;
-  return {
-    user: MOCK_USER,
-    token: { ...MOCK_TOKEN, expiresAt: Date.now() + 3600_000 },
-  };
+  const { error } = await supabase.auth.signOut();
+  if (error) throw new Error(error.message);
 }

@@ -21,3 +21,9 @@ export interface AuthResponse {
   user: User;
   token: AuthToken;
 }
+
+export interface RegisterResponse {
+  user: User | null;
+  token: AuthToken | null;
+  confirmEmail: boolean;
+}

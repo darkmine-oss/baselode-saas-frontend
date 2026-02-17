@@ -3,6 +3,13 @@
   height: 100%;
 }
 
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .main {
   flex: 1;
   display: flex;
@@ -10,6 +17,22 @@
   justify-content: center;
   padding: 32px;
   overflow-y: auto;
+}
+
+.footer {
+  padding: 8px 32px;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  text-align: right;
+}
+
+.footer a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
 }
 
 .placeholder {

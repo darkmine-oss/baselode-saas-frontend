@@ -1,21 +1,16 @@
 import { API_BASE_URL } from './config';
+import { supabase } from '../lib/supabase';
 
-function getAuthToken(): string | null {
-  const stored = localStorage.getItem('auth_token');
-  if (!stored) return null;
-  try {
-    const parsed = JSON.parse(stored);
-    return parsed.accessToken ?? null;
-  } catch {
-    return null;
-  }
+async function getAuthToken(): Promise<string | null> {
+  const { data: { session } } = await supabase.auth.getSession();
+  return session?.access_token ?? null;
 }
 
 export async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const token = getAuthToken();
+  const token = await getAuthToken();
 
   const headers = new Headers(options.headers);
   headers.set('Content-Type', 'application/json');
