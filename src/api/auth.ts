@@ -49,7 +49,7 @@ export async function register(req: RegisterRequest): Promise<RegisterResponse> 
     throw new Error(error.message);
   }
 
-  if (!data.session) {
+  if (!data.session || !data.user) {
     return {
       user: data.user ? mapUser(data.user) : null,
       token: null,
@@ -58,7 +58,7 @@ export async function register(req: RegisterRequest): Promise<RegisterResponse> 
   }
 
   return {
-    user: mapUser(data.user!),
+    user: mapUser(data.user),
     token: mapToken(data.session),
     confirmEmail: false,
   };
