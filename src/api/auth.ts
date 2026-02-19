@@ -42,7 +42,10 @@ export async function register(req: RegisterRequest): Promise<RegisterResponse> 
   const { data, error } = await supabase.auth.signUp({
     email: req.email,
     password: req.password,
-    options: { data: { name: req.name } },
+    options: {
+      data: { name: req.name },
+      emailRedirectTo: `${window.location.origin}/login`,
+    },
   });
 
   if (error) {
