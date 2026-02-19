@@ -1,4 +1,5 @@
 import type { ChatMessage } from '../types';
+import type { SavedExtent } from '../hooks/useChat';
 import { Sidebar } from '../components/Sidebar';
 import { ChatDataTable } from '../components/ChatDataTable';
 import styles from './AppLayout.module.css';
@@ -7,6 +8,9 @@ interface AppLayoutProps {
   messages: ChatMessage[];
   streaming: boolean;
   sendMessage: (content: string) => Promise<void>;
+  savedExtents: SavedExtent[];
+  addExtent: (extent: SavedExtent) => void;
+  chatInstanceId: string | null;
 }
 
 function getLatestAssistantMessage(messages: ChatMessage[]): ChatMessage | undefined {
@@ -45,14 +49,19 @@ function getAttachmentBaseKey(type: string, payload: unknown): string {
   return `${type}:${stableStringify(payload)}`;
 }
 
-export function AppLayout({ messages, streaming, sendMessage }: AppLayoutProps) {
+export function AppLayout({ messages, streaming, sendMessage, savedExtents, addExtent, chatInstanceId }: AppLayoutProps) {
   const latestAssistant = getLatestAssistantMessage(messages);
   const dataAttachments = latestAssistant?.data;
   const attachmentKeyCounts = new Map<string, number>();
 
   return (
     <div className={styles.layout}>
-      <Sidebar messages={messages} streaming={streaming} sendMessage={sendMessage} />
+      <Sidebar 
+        messages={messages} 
+        streaming={streaming} 
+        sendMessage={sendMessage}
+        savedExtents={savedExtents}
+      />
       <div className={styles.content}>
         <main className={styles.main}>
           {dataAttachments && dataAttachments.length > 0 ? (
@@ -63,7 +72,15 @@ export function AppLayout({ messages, streaming, sendMessage }: AppLayoutProps) 
                 attachmentKeyCounts.set(baseKey, seenCount + 1);
                 const key = seenCount === 0 ? baseKey : `${baseKey}:${seenCount}`;
 
-                return <ChatDataTable key={key} type={attachment.type} payload={attachment.payload} />;
+                return (
+                  <ChatDataTable 
+                    key={key} 
+                    type={attachment.type} 
+                    payload={attachment.payload}
+                    chatInstanceId={chatInstanceId}
+                    onExtentSaved={addExtent}
+                  />
+                );
               })}
             </div>
           ) : (
