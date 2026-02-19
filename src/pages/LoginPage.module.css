@@ -105,3 +105,53 @@
 .link a:hover {
   text-decoration: underline;
 }
+
+.success {
+  color: #16a34a;
+  font-size: 0.875rem;
+  background: rgba(22, 163, 74, 0.08);
+  border: 1px solid rgba(22, 163, 74, 0.2);
+  border-radius: var(--glass-radius-sm);
+  padding: 10px 14px;
+  margin-bottom: 20px;
+}
+
+.linkRight {
+  text-align: right;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+}
+
+.linkRight a {
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+.linkRight a:hover {
+  text-decoration: underline;
+}
+
+.buttonLink {
+  display: block;
+  width: 100%;
+  padding: 11px 0;
+  border: none;
+  border-radius: var(--glass-radius-sm);
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+
+.buttonLink:hover {
+  background: var(--color-accent-hover);
+}
+
+.buttonSpacing {
+  margin-top: 20px;
+}

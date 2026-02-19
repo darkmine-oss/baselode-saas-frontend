@@ -1,14 +1,16 @@
 import { useState, type FormEvent } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import styles from './LoginPage.module.css';
 
 export function LoginPage() {
   const { login, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const successMessage = (location.state as { message?: string })?.message;
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -27,6 +29,11 @@ export function LoginPage() {
         <h1 className={styles.title}>Sign in</h1>
         <p className={styles.subtitle}>Enter your credentials to continue</p>
 
+        {successMessage && (
+          <p className={styles.success}>
+            {successMessage}
+          </p>
+        )}
         {error && <p className={styles.error}>{error}</p>}
 
         <div className={styles.field}>
@@ -54,6 +61,10 @@ export function LoginPage() {
             required
           />
         </div>
+
+        <p className={styles.linkRight}>
+          <Link to="/forgot-password">Forgot password?</Link>
+        </p>
 
         <button className={styles.button} type="submit" disabled={loading}>
           {loading ? 'Signing in...' : 'Sign in'}

@@ -1,4 +1,4 @@
-import type { LoginRequest, RegisterRequest, AuthResponse, RegisterResponse } from '../types';
+import type { LoginRequest, RegisterRequest, AuthResponse, RegisterResponse, PasswordResetRequest, ResetPasswordRequest } from '../types';
 import type { User } from '../types/user';
 import type { AuthToken } from '../types/auth';
 import { supabase } from '../lib/supabase';
@@ -70,4 +70,24 @@ export async function register(req: RegisterRequest): Promise<RegisterResponse> 
 export async function logout(): Promise<void> {
   const { error } = await supabase.auth.signOut();
   if (error) throw new Error(error.message);
+}
+
+export async function requestPasswordReset(req: PasswordResetRequest): Promise<void> {
+  const { error } = await supabase.auth.resetPasswordForEmail(req.email, {
+    redirectTo: `${window.location.origin}/reset-password`,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function resetPassword(req: ResetPasswordRequest): Promise<void> {
+  const { error } = await supabase.auth.updateUser({
+    password: req.password,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
 }
