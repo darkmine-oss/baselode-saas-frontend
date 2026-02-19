@@ -4,10 +4,23 @@ import * as chatApi from '../api/chat';
 
 let nextId = 0;
 
+export interface SavedExtent {
+  id: string;
+  name: string;
+  bounds: {
+    north: number;
+    south: number;
+    east: number;
+    west: number;
+  };
+  geometry: GeoJSON.Feature;
+}
+
 export function useChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [streaming, setStreaming] = useState(false);
   const instanceIdRef = useRef<string | null>(null);
+  const [savedExtents, setSavedExtents] = useState<SavedExtent[]>([]);
 
   const sendMessage = useCallback(async (content: string) => {
     const userMsg: ChatMessage = {
@@ -71,5 +84,24 @@ export function useChat() {
     }
   }, []);
 
-  return { messages, streaming, sendMessage };
+  const addExtent = useCallback((extent: SavedExtent) => {
+    setSavedExtents((prev) => [...prev, extent]);
+    
+    // Save to API (mocked)
+    if (instanceIdRef.current) {
+      chatApi.saveData(instanceIdRef.current, extent.name, extent)
+        .catch((err) => {
+          console.error('Failed to save extent:', err);
+        });
+    }
+  }, []);
+
+  return { 
+    messages, 
+    streaming, 
+    sendMessage, 
+    savedExtents, 
+    addExtent,
+    chatInstanceId: instanceIdRef.current,
+  };
 }

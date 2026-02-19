@@ -1,11 +1,14 @@
 import { lazy, Suspense } from 'react';
+import type { SavedExtent } from '../hooks/useChat';
 import styles from './ChatDataTable.module.css';
 
-const CollarMap = lazy(() => import('./CollarMap').then((module) => ({ default: module.CollarMap })));
+const DrawableMap = lazy(() => import('./DrawableMap').then((module) => ({ default: module.DrawableMap })));
 
 interface ChatDataTableProps {
   type: string;
   payload: unknown;
+  chatInstanceId: string | null;
+  onExtentSaved?: (extent: SavedExtent) => void;
 }
 
 interface CollarPayload {
@@ -61,7 +64,7 @@ function CollarTable({ payload }: { payload: CollarPayload }) {
   );
 }
 
-export function ChatDataTable({ type, payload }: ChatDataTableProps) {
+export function ChatDataTable({ type, payload, chatInstanceId, onExtentSaved }: ChatDataTableProps) {
   if (type === 'collar_list' && isCollarPayload(payload)) {
     return <CollarTable payload={payload} />;
   }
@@ -69,9 +72,11 @@ export function ChatDataTable({ type, payload }: ChatDataTableProps) {
   if (type === 'collar_map' && isCollarPayload(payload)) {
     return (
       <Suspense fallback={<p className={styles.empty}>Loading map...</p>}>
-        <CollarMap
+        <DrawableMap
           collars={payload.collars as { hole_id?: string; latitude?: number; longitude?: number; [key: string]: unknown }[]}
           totalCount={payload.total_count}
+          chatInstanceId={chatInstanceId}
+          onExtentSaved={onExtentSaved}
         />
       </Suspense>
     );

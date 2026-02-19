@@ -100,3 +100,17 @@ export async function sendMessage(instanceId: string, message: string): Promise<
   if (!res.ok) throw new Error(`Send message failed: ${res.status}`);
   return res;
 }
+
+export async function saveData(
+  chatId: string,
+  name: string,
+  shape: unknown,
+): Promise<void> {
+  const headers = await getAuthHeaders();
+  const res = await fetch(`${API_BASE_URL}/save_data`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ chatId, name, shape }),
+  });
+  if (!res.ok) throw new Error(`Save data failed: ${res.status}`);
+}

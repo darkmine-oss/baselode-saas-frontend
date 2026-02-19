@@ -1,15 +1,18 @@
 import { useState, useRef, useEffect, type FormEvent } from 'react';
 import type { ChatMessage } from '../types';
+import type { SavedExtent } from '../hooks/useChat';
 import styles from './ChatPanel.module.css';
 
 interface ChatPanelProps {
   messages: ChatMessage[];
   streaming: boolean;
   sendMessage: (content: string) => Promise<void>;
+  savedExtents: SavedExtent[];
 }
 
-export function ChatPanel({ messages, streaming, sendMessage }: ChatPanelProps) {
+export function ChatPanel({ messages, streaming, sendMessage, savedExtents }: ChatPanelProps) {
   const [input, setInput] = useState('');
+  const [showExtents, setShowExtents] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -23,6 +26,12 @@ export function ChatPanel({ messages, streaming, sendMessage }: ChatPanelProps) 
     setInput('');
     await sendMessage(text);
   }
+
+  const insertExtent = (extent: SavedExtent) => {
+    const extentText = `[Extent: ${extent.name} - N:${extent.bounds.north.toFixed(4)}, S:${extent.bounds.south.toFixed(4)}, E:${extent.bounds.east.toFixed(4)}, W:${extent.bounds.west.toFixed(4)}]`;
+    setInput((prev) => prev + (prev ? ' ' : '') + extentText);
+    setShowExtents(false);
+  };
 
   return (
     <div className={styles.panel}>
@@ -47,6 +56,57 @@ export function ChatPanel({ messages, streaming, sendMessage }: ChatPanelProps) 
         ))}
         <div ref={messagesEndRef} />
       </div>
+
+      {savedExtents.length > 0 && (
+        <div style={{ padding: '8px', borderTop: '1px solid #e0e0e0' }}>
+          <button
+            onClick={() => setShowExtents(!showExtents)}
+            style={{
+              width: '100%',
+              padding: '6px',
+              backgroundColor: '#f5f5f5',
+              border: '1px solid #ddd',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '12px',
+              textAlign: 'left',
+            }}
+          >
+            {showExtents ? '▼' : '▶'} Saved Extents ({savedExtents.length})
+          </button>
+          {showExtents && (
+            <div style={{ marginTop: '8px', maxHeight: '150px', overflowY: 'auto' }}>
+              {savedExtents.map((extent) => (
+                <div
+                  key={extent.id}
+                  onClick={() => insertExtent(extent)}
+                  style={{
+                    padding: '6px 8px',
+                    marginBottom: '4px',
+                    backgroundColor: '#fff',
+                    border: '1px solid #e0e0e0',
+                    borderRadius: '3px',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#f9f9f9';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = '#fff';
+                  }}
+                >
+                  <div style={{ fontWeight: 600, marginBottom: '2px' }}>{extent.name}</div>
+                  <div style={{ fontSize: '11px', color: '#666' }}>
+                    N:{extent.bounds.north.toFixed(4)}, S:{extent.bounds.south.toFixed(4)}<br />
+                    E:{extent.bounds.east.toFixed(4)}, W:{extent.bounds.west.toFixed(4)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <form className={styles.inputArea} onSubmit={handleSend}>
         <div className={styles.inputRow}>
