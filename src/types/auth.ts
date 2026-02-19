@@ -27,3 +27,11 @@ export interface RegisterResponse {
   token: AuthToken | null;
   confirmEmail: boolean;
 }
+
+export interface PasswordResetRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  password: string;
+}
