@@ -8,6 +8,12 @@
   border-right: 1px solid var(--glass-border);
   display: flex;
   flex-direction: column;
+  position: relative;
+  transition: transform 0.3s ease-in-out;
+}
+
+.sidebar.collapsed {
+  transform: translateX(-100%);
 }
 
 .menuSection {
@@ -20,4 +26,90 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.toggleButton {
+  position: absolute;
+  top: 50%;
+  right: -20px;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 60px;
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  border-left: none;
+  border-radius: 0 var(--glass-radius-sm) var(--glass-radius-sm) 0;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.toggleButton:hover {
+  background: var(--glass-bg-strong);
+  color: var(--color-accent);
+  box-shadow: var(--glass-shadow);
+}
+
+.showButton {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 60px;
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  border-left: none;
+  border-radius: 0 var(--glass-radius-sm) var(--glass-radius-sm) 0;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 1000;
+  box-shadow: var(--glass-shadow);
+}
+
+.showButton:hover {
+  background: var(--glass-bg-strong);
+  color: var(--color-accent);
+  width: 50px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    min-width: 100%;
+    max-width: 400px;
+  }
+  
+  .sidebar.collapsed {
+    transform: translateX(-100%);
+  }
+  
+  .toggleButton {
+    right: -15px;
+    width: 30px;
+    height: 50px;
+  }
+  
+  .showButton {
+    width: 30px;
+    height: 50px;
+  }
 }

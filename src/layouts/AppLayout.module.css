@@ -47,3 +47,24 @@
   flex-direction: column;
   gap: 24px;
 }
+
+/* Mobile responsive layout */
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column-reverse;
+  }
+  
+  .content {
+    flex: 1;
+    min-height: 0;
+  }
+  
+  .main {
+    padding: 16px;
+  }
+  
+  .footer {
+    padding: 8px 16px;
+    font-size: 0.6875rem;
+  }
+}
