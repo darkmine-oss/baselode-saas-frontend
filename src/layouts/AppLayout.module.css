@@ -51,12 +51,13 @@
 /* Mobile responsive layout */
 @media (max-width: 768px) {
   .layout {
-    flex-direction: column-reverse;
+    flex-direction: column;
   }
   
   .content {
     flex: 1;
     min-height: 0;
+    order: -1;
   }
   
   .main {
