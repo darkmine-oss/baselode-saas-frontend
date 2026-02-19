@@ -52,7 +52,7 @@
 }
 
 .toggleButton:hover {
-  background: var(--glass-bg-strong);
+  background: rgba(255, 255, 255, 0.6);
   color: var(--color-accent);
   box-shadow: var(--glass-shadow);
 }
@@ -82,7 +82,7 @@
 }
 
 .showButton:hover {
-  background: var(--glass-bg-strong);
+  background: rgba(255, 255, 255, 0.6);
   color: var(--color-accent);
   width: 50px;
 }
