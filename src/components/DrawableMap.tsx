@@ -37,6 +37,7 @@ export function DrawableMap({
   collars, 
   totalCount, 
   chatInstanceId: _chatInstanceId, // eslint-disable-line @typescript-eslint/no-unused-vars
+  // chatInstanceId kept in signature for future use (e.g., server-side extent association)
   onExtentSaved 
 }: DrawableMapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -160,11 +161,13 @@ export function DrawableMap({
     );
 
     // Add drawing controls
+    // Note: Using 'draw_polygon' mode for drawing rectangles/bounding boxes
+    // MapLibre Draw doesn't have a separate rectangle mode; rectangles are polygons
     const draw = new MapboxDraw({
       displayControlsDefault: false,
       controls: {
-        polygon: false,
-        trash: true,
+        polygon: false, // Hide default polygon button; using custom button
+        trash: true,    // Keep trash button for deleting shapes
       },
       modes: {
         ...MapboxDraw.modes,
