@@ -70,9 +70,8 @@ export function ResetPasswordPage() {
           <h1 className={styles.title}>Invalid reset link</h1>
           <p className={styles.error}>{error}</p>
           <button 
-            className={styles.button} 
+            className={`${styles.button} ${styles.buttonSpacing}`}
             onClick={() => navigate('/forgot-password')}
-            style={{ marginTop: '20px' }}
           >
             Request new reset link
           </button>

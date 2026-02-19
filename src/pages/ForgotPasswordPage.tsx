@@ -32,7 +32,7 @@ export function ForgotPasswordPage() {
           <p className={styles.subtitle}>
             We've sent a password reset link to {email}. Please check your inbox and follow the instructions.
           </p>
-          <Link to="/login" className={styles.button} style={{ textAlign: 'center', display: 'block', textDecoration: 'none' }}>
+          <Link to="/login" className={styles.buttonLink}>
             Back to login
           </Link>
         </div>

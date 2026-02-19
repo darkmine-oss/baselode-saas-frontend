@@ -30,7 +30,7 @@ export function LoginPage() {
         <p className={styles.subtitle}>Enter your credentials to continue</p>
 
         {successMessage && (
-          <p className={styles.error} style={{ color: '#16a34a', background: 'rgba(22, 163, 74, 0.08)', borderColor: 'rgba(22, 163, 74, 0.2)' }}>
+          <p className={styles.success}>
             {successMessage}
           </p>
         )}
@@ -62,7 +62,7 @@ export function LoginPage() {
           />
         </div>
 
-        <p className={styles.link} style={{ textAlign: 'right', marginTop: '0', marginBottom: '0' }}>
+        <p className={styles.linkRight}>
           <Link to="/forgot-password">Forgot password?</Link>
         </p>
 
