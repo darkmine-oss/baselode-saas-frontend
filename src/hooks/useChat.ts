@@ -96,11 +96,18 @@ export function useChat() {
     }
   }, []);
 
-  return { 
-    messages, 
-    streaming, 
-    sendMessage, 
-    savedExtents, 
+  const resetChat = useCallback(() => {
+    instanceIdRef.current = null;
+    setMessages([]);
+    setSavedExtents([]);
+  }, []);
+
+  return {
+    messages,
+    streaming,
+    sendMessage,
+    resetChat,
+    savedExtents,
     addExtent,
     chatInstanceId: instanceIdRef.current,
   };

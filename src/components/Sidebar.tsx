@@ -9,10 +9,11 @@ interface SidebarProps {
   messages: ChatMessage[];
   streaming: boolean;
   sendMessage: (content: string) => Promise<void>;
+  resetChat: () => void;
   savedExtents: SavedExtent[];
 }
 
-export function Sidebar({ messages, streaming, sendMessage, savedExtents }: SidebarProps) {
+export function Sidebar({ messages, streaming, sendMessage, resetChat, savedExtents }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
@@ -23,11 +24,12 @@ export function Sidebar({ messages, streaming, sendMessage, savedExtents }: Side
         </div>
         <div className={styles.chatSection}>
           <ChatPanel
-            messages={messages} 
-            streaming={streaming} 
-            sendMessage={sendMessage} 
+            messages={messages}
+            streaming={streaming}
+            sendMessage={sendMessage}
+            resetChat={resetChat}
             savedExtents={savedExtents}
-            />
+          />
         </div>
         <button
           className={styles.toggleButton}
