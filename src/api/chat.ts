@@ -20,7 +20,17 @@ async function authedFetch(url: string, init: RequestInit): Promise<Response> {
   let res = await fetch(url, { ...init, headers });
   if (res.status === 401) {
     // Token may be stale — refresh and retry once before giving up
-    const { data: { session: refreshed } } = await supabase.auth.refreshSession();
+    let refreshed: Awaited<ReturnType<typeof supabase.auth.refreshSession>>['data']['session'] = null;
+    try {
+      const { data, error } = await supabase.auth.refreshSession();
+      if (error) {
+        console.warn('Token refresh failed:', error.message);
+        throw new AuthError();
+      }
+      refreshed = data.session;
+    } catch (err) {
+      throw err instanceof AuthError ? err : new AuthError();
+    }
     if (refreshed?.access_token) {
       headers['Authorization'] = `Bearer ${refreshed.access_token}`;
       res = await fetch(url, { ...init, headers });
