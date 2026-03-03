@@ -4,6 +4,13 @@ import { supabase } from '../lib/supabase';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json' };
 
+export class AuthError extends Error {
+  constructor(message = 'Session expired. Please log in again.') {
+    super(message);
+    this.name = 'AuthError';
+  }
+}
+
 async function getAuthHeaders(): Promise<Record<string, string>> {
   const { data: { session } } = await supabase.auth.getSession();
   const headers: Record<string, string> = { ...JSON_HEADERS };
@@ -86,6 +93,7 @@ export async function createChat(message: string): Promise<Response> {
     headers,
     body: JSON.stringify({ message }),
   });
+  if (res.status === 401) throw new AuthError();
   if (!res.ok) throw new Error(`Chat creation failed: ${res.status}`);
   return res;
 }
@@ -97,6 +105,7 @@ export async function sendMessage(instanceId: string, message: string): Promise<
     headers,
     body: JSON.stringify({ message }),
   });
+  if (res.status === 401) throw new AuthError();
   if (!res.ok) throw new Error(`Send message failed: ${res.status}`);
   return res;
 }
