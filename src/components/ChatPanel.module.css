@@ -12,6 +12,33 @@
   color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.newChatBtn {
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  padding: 3px 10px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius-sm);
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.newChatBtn:hover {
+  background: rgba(255, 255, 255, 0.4);
+  color: var(--color-text);
+}
+
+.newChatBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .messages {

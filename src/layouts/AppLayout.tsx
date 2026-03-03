@@ -8,6 +8,7 @@ interface AppLayoutProps {
   messages: ChatMessage[];
   streaming: boolean;
   sendMessage: (content: string) => Promise<void>;
+  resetChat: () => void;
   savedExtents: SavedExtent[];
   addExtent: (extent: SavedExtent) => void;
   chatInstanceId: string | null;
@@ -49,17 +50,18 @@ function getAttachmentBaseKey(type: string, payload: unknown): string {
   return `${type}:${stableStringify(payload)}`;
 }
 
-export function AppLayout({ messages, streaming, sendMessage, savedExtents, addExtent, chatInstanceId }: AppLayoutProps) {
+export function AppLayout({ messages, streaming, sendMessage, resetChat, savedExtents, addExtent, chatInstanceId }: AppLayoutProps) {
   const latestAssistant = getLatestAssistantMessage(messages);
   const dataAttachments = latestAssistant?.data;
   const attachmentKeyCounts = new Map<string, number>();
 
   return (
     <div className={styles.layout}>
-      <Sidebar 
-        messages={messages} 
-        streaming={streaming} 
+      <Sidebar
+        messages={messages}
+        streaming={streaming}
         sendMessage={sendMessage}
+        resetChat={resetChat}
         savedExtents={savedExtents}
       />
       <div className={styles.content}>

@@ -7,10 +7,11 @@ interface ChatPanelProps {
   messages: ChatMessage[];
   streaming: boolean;
   sendMessage: (content: string) => Promise<void>;
+  resetChat: () => void;
   savedExtents: SavedExtent[];
 }
 
-export function ChatPanel({ messages, streaming, sendMessage, savedExtents }: ChatPanelProps) {
+export function ChatPanel({ messages, streaming, sendMessage, resetChat, savedExtents }: ChatPanelProps) {
   const [input, setInput] = useState('');
   const [showExtents, setShowExtents] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -35,7 +36,17 @@ export function ChatPanel({ messages, streaming, sendMessage, savedExtents }: Ch
 
   return (
     <div className={styles.panel}>
-      <div className={styles.header}>Chat</div>
+      <div className={styles.header}>
+        Chat
+        <button
+          className={styles.newChatBtn}
+          onClick={resetChat}
+          disabled={streaming}
+          title="Start a new chat"
+        >
+          New chat
+        </button>
+      </div>
 
       <div className={styles.messages}>
         {messages.length === 0 && (

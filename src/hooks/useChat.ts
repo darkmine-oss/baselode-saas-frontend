@@ -1,7 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import type { ChatMessage } from '../types';
 import * as chatApi from '../api/chat';
-import { useAuth } from './useAuth';
 
 let nextId = 0;
 
@@ -18,7 +17,6 @@ export interface SavedExtent {
 }
 
 export function useChat() {
-  const { logout } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [streaming, setStreaming] = useState(false);
   const instanceIdRef = useRef<string | null>(null);
@@ -74,10 +72,6 @@ export function useChat() {
         },
       );
     } catch (err) {
-      if (err instanceof chatApi.AuthError) {
-        await logout();
-        return;
-      }
       setMessages((prev) =>
         prev.map((m) =>
           m.id === assistantMsgId
@@ -88,7 +82,7 @@ export function useChat() {
     } finally {
       setStreaming(false);
     }
-  }, [logout]);
+  }, []);
 
   const addExtent = useCallback((extent: SavedExtent) => {
     setSavedExtents((prev) => [...prev, extent]);
@@ -102,11 +96,18 @@ export function useChat() {
     }
   }, []);
 
-  return { 
-    messages, 
-    streaming, 
-    sendMessage, 
-    savedExtents, 
+  const resetChat = useCallback(() => {
+    instanceIdRef.current = null;
+    setMessages([]);
+    setSavedExtents([]);
+  }, []);
+
+  return {
+    messages,
+    streaming,
+    sendMessage,
+    resetChat,
+    savedExtents,
     addExtent,
     chatInstanceId: instanceIdRef.current,
   };
