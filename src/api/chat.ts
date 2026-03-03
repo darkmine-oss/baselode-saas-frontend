@@ -4,13 +4,22 @@ import { supabase } from '../lib/supabase';
 
 const JSON_HEADERS = { 'Content-Type': 'application/json' };
 
-async function getAuthHeaders(): Promise<Record<string, string>> {
+export class AuthError extends Error {
+  constructor(message = 'Session expired. Please log in again.') {
+    super(message);
+    this.name = 'AuthError';
+  }
+}
+
+async function authedFetch(url: string, init: RequestInit): Promise<Response> {
   const { data: { session } } = await supabase.auth.getSession();
   const headers: Record<string, string> = { ...JSON_HEADERS };
   if (session?.access_token) {
     headers['Authorization'] = `Bearer ${session.access_token}`;
   }
-  return headers;
+  const res = await fetch(url, { ...init, headers });
+  if (res.status === 401) throw new AuthError();
+  return res;
 }
 
 function parseSSELine(line: string): { field: string; value: string } | null {
@@ -80,10 +89,8 @@ export async function streamResponse(
 }
 
 export async function createChat(message: string): Promise<Response> {
-  const headers = await getAuthHeaders();
-  const res = await fetch(`${API_BASE_URL}/chat/`, {
+  const res = await authedFetch(`${API_BASE_URL}/chat/`, {
     method: 'POST',
-    headers,
     body: JSON.stringify({ message }),
   });
   if (!res.ok) throw new Error(`Chat creation failed: ${res.status}`);
@@ -91,10 +98,8 @@ export async function createChat(message: string): Promise<Response> {
 }
 
 export async function sendMessage(instanceId: string, message: string): Promise<Response> {
-  const headers = await getAuthHeaders();
-  const res = await fetch(`${API_BASE_URL}/chat/${instanceId}`, {
+  const res = await authedFetch(`${API_BASE_URL}/chat/${instanceId}`, {
     method: 'POST',
-    headers,
     body: JSON.stringify({ message }),
   });
   if (!res.ok) throw new Error(`Send message failed: ${res.status}`);
@@ -106,10 +111,8 @@ export async function saveData(
   name: string,
   shape: unknown,
 ): Promise<void> {
-  const headers = await getAuthHeaders();
-  const res = await fetch(`${API_BASE_URL}/save_data`, {
+  const res = await authedFetch(`${API_BASE_URL}/save_data`, {
     method: 'POST',
-    headers,
     body: JSON.stringify({ chatId, name, shape }),
   });
   if (!res.ok) throw new Error(`Save data failed: ${res.status}`);
