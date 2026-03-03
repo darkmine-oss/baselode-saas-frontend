@@ -17,8 +17,16 @@ async function authedFetch(url: string, init: RequestInit): Promise<Response> {
   if (session?.access_token) {
     headers['Authorization'] = `Bearer ${session.access_token}`;
   }
-  const res = await fetch(url, { ...init, headers });
-  if (res.status === 401) throw new AuthError();
+  let res = await fetch(url, { ...init, headers });
+  if (res.status === 401) {
+    // Token may be stale — refresh and retry once before giving up
+    const { data: { session: refreshed } } = await supabase.auth.refreshSession();
+    if (refreshed?.access_token) {
+      headers['Authorization'] = `Bearer ${refreshed.access_token}`;
+      res = await fetch(url, { ...init, headers });
+    }
+    if (res.status === 401) throw new AuthError();
+  }
   return res;
 }
 
