@@ -1,0 +1,45 @@
+.header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.holeId {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.meta {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.select {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius-sm, 6px);
+  color: var(--color-text);
+  font-size: 0.8125rem;
+  padding: 4px 8px;
+  cursor: pointer;
+  min-width: 120px;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--color-accent, #6366f1);
+}
+
+.chart {
+  width: 100%;
+  min-height: 360px;
+}
