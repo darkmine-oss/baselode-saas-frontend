@@ -65,6 +65,35 @@
   color: var(--color-text-secondary);
 }
 
+.examples {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 20px 12px;
+}
+
+.exampleBtn {
+  text-align: left;
+  padding: 7px 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--glass-radius-sm);
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.exampleBtn:hover {
+  background: rgba(255, 255, 255, 0.45);
+  color: var(--color-text);
+}
+
+.exampleBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .inputArea {
   padding: 12px 20px 20px;
   border-top: 1px solid var(--glass-border);

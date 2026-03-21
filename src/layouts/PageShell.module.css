@@ -1,0 +1,27 @@
+.layout {
+  display: flex;
+  height: 100%;
+}
+
+.sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  height: 100%;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-right: 1px solid var(--glass-border);
+}
+
+.menuSection {
+  padding: 24px 20px 16px;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.main {
+  min-height: 100%;
+}

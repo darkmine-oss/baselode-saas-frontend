@@ -11,6 +11,21 @@ interface ChatPanelProps {
   savedExtents: SavedExtent[];
 }
 
+const EXAMPLE_QUESTIONS = [
+  {
+    label: 'Map collars',
+    prompt: 'Show me a map with collars in the bounding box min_lat=-32.85, min_lon=122.067, max_lat=-32.783, max_lon=122.267',
+  },
+  {
+    label: 'Assay strip log – DUND0041',
+    prompt: 'Show me an assay strip log for hole 142993DundasDUND0041',
+  },
+  {
+    label: 'Geology strip log – DUND0041',
+    prompt: 'Show me a geology strip log for hole 142993DundasDUND0041',
+  },
+];
+
 export function ChatPanel({ messages, streaming, sendMessage, resetChat, savedExtents }: ChatPanelProps) {
   const [input, setInput] = useState('');
   const [showExtents, setShowExtents] = useState(false);
@@ -116,6 +131,21 @@ export function ChatPanel({ messages, streaming, sendMessage, resetChat, savedEx
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {messages.length === 0 && (
+        <div className={styles.examples}>
+          {EXAMPLE_QUESTIONS.map((q) => (
+            <button
+              key={q.label}
+              className={styles.exampleBtn}
+              disabled={streaming}
+              onClick={() => sendMessage(q.prompt)}
+            >
+              {q.label}
+            </button>
+          ))}
         </div>
       )}
 

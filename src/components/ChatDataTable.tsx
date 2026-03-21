@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import type { SavedExtent } from '../hooks/useChat';
 import styles from './ChatDataTable.module.css';
+import { isStripLogPayload, StripLogChart } from './StripLogChart';
 
 const DrawableMap = lazy(() => import('./DrawableMap').then((module) => ({ default: module.DrawableMap })));
 
@@ -80,6 +81,10 @@ export function ChatDataTable({ type, payload, chatInstanceId, onExtentSaved }: 
         />
       </Suspense>
     );
+  }
+
+  if (type === 'strip_log' && isStripLogPayload(payload)) {
+    return <StripLogChart payload={payload} />;
   }
 
   return (
